@@ -9,5 +9,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "<h1 align=\"center\">✨ Full-Stack Interview Platform ✨</h1>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnandChoubey7003/Talent_Iq.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AnandChoubey7003/Talent_Iq/issues"
+  },
+  "homepage": "https://github.com/AnandChoubey7003/Talent_Iq#readme"
 }
