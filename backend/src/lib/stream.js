@@ -2,11 +2,11 @@ import { StreamChat } from "stream-chat";
 import { StreamClient } from "@stream-io/node-sdk";
 import { ENV } from "./env.js";
 
-const apiKey = ENV.STREAM_API_KEY;
-const apiSecret = ENV.STREAM_API_SECRET;
+const apiKey = ENV.STREAM_API_KEY || "placeholder_api_key";
+const apiSecret = ENV.STREAM_API_SECRET || "placeholder_api_secret_32_characters_long_key";
 
-if (!apiKey || !apiSecret) {
-  console.error("STREAM_API_KEY or STREAM_API_SECRET is missing");
+if (!ENV.STREAM_API_KEY || !ENV.STREAM_API_SECRET) {
+  console.warn("⚠️ STREAM_API_KEY or STREAM_API_SECRET is missing from environment variables.");
 }
 
 export const chatClient = StreamChat.getInstance(apiKey, apiSecret); // will be used chat features
