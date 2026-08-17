@@ -18,7 +18,14 @@ const frontendDistPath = path.join(__dirname, "../frontend/dist");
 
 // middleware
 app.use(express.json());
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: ENV.CLIENT_URL && ENV.CLIENT_URL !== "http://localhost:5173"
+      ? [ENV.CLIENT_URL, "http://localhost:5173"]
+      : true,
+    credentials: true,
+  })
+);
 app.use(clerkMiddleware());
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
