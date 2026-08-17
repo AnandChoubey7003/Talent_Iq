@@ -197,11 +197,11 @@ void reverseString(char* s, int sSize) {
 int main() {
     char test1[] = {'h','e','l','l','o','\\0'};
     reverseString(test1, 5);
-    printf("[\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\"]\\n", test1[0], test1[1], test1[2], test1[3], test1[4]);
+    printf("[\\"%c\\",\\"%c\\",\\"%c\\",\\"%c\\",\\"%c\\"]\\n", test1[0], test1[1], test1[2], test1[3], test1[4]);
 
     char test2[] = {'H','a','n','n','a','h','\\0'};
     reverseString(test2, 6);
-    printf("[\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\"]\\n", test2[0], test2[1], test2[2], test2[3], test2[4], test2[5]);
+    printf("[\\"%c\\",\\"%c\\",\\"%c\\",\\"%c\\",\\"%c\\",\\"%c\\"]\\n", test2[0], test2[1], test2[2], test2[3], test2[4], test2[5]);
 
     return 0;
 }`,

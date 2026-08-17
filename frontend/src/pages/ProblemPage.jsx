@@ -57,13 +57,15 @@ function ProblemPage() {
   };
 
   const normalizeOutput = (output) => {
-    // normalize output for comparison (trim whitespace, handle different spacing)
-    return output
+    // normalize output for comparison (trim whitespace, handle quotes and spacing)
+    return (output || "")
       .trim()
       .split("\n")
       .map((line) =>
         line
           .trim()
+          // normalize single quotes to double quotes for consistent array/string output comparison
+          .replace(/'/g, '"')
           // remove spaces after [ and before ]
           .replace(/\[\s+/g, "[")
           .replace(/\s+\]/g, "]")
