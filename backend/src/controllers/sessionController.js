@@ -17,22 +17,25 @@ export async function createSession(req, res) {
     // create session in db
     const session = await Session.create({ problem, difficulty, host: userId, callId });
 
-    // create stream video call
-    await streamClient.video.call("default", callId).getOrCreate({
-      data: {
+    // create stream video call and chat channel safely
+    try {
+      await streamClient.video.call("default", callId).getOrCreate({
+        data: {
+          created_by_id: clerkId,
+          custom: { problem, difficulty, sessionId: session._id.toString() },
+        },
+      });
+
+      const channel = chatClient.channel("messaging", callId, {
+        name: `${problem} Session`,
         created_by_id: clerkId,
-        custom: { problem, difficulty, sessionId: session._id.toString() },
-      },
-    });
+        members: [clerkId],
+      });
 
-    // chat messaging
-    const channel = chatClient.channel("messaging", callId, {
-      name: `${problem} Session`,
-      created_by_id: clerkId,
-      members: [clerkId],
-    });
-
-    await channel.create();
+      await channel.create();
+    } catch (streamErr) {
+      console.warn("Stream integration warning (skipped video/chat setup):", streamErr.message);
+    }
 
     res.status(201).json({ session });
   } catch (error) {
@@ -116,8 +119,12 @@ export async function joinSession(req, res) {
     session.participant = userId;
     await session.save();
 
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.addMembers([clerkId]);
+    try {
+      const channel = chatClient.channel("messaging", session.callId);
+      await channel.addMembers([clerkId]);
+    } catch (streamErr) {
+      console.warn("Stream chat addMembers warning:", streamErr.message);
+    }
 
     res.status(200).json({ session });
   } catch (error) {
@@ -145,13 +152,17 @@ export async function endSession(req, res) {
       return res.status(400).json({ message: "Session is already completed" });
     }
 
-    // delete stream video call
-    const call = streamClient.video.call("default", session.callId);
-    await call.delete({ hard: true });
+    try {
+      // delete stream video call
+      const call = streamClient.video.call("default", session.callId);
+      await call.delete({ hard: true });
 
-    // delete stream chat channel
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.delete();
+      // delete stream chat channel
+      const channel = chatClient.channel("messaging", session.callId);
+      await channel.delete();
+    } catch (streamErr) {
+      console.warn("Stream delete call/channel warning:", streamErr.message);
+    }
 
     session.status = "completed";
     await session.save();

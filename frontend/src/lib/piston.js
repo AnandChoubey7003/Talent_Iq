@@ -6,6 +6,8 @@ const LANGUAGE_VERSIONS = {
   javascript: { language: "javascript", version: "18.15.0" },
   python: { language: "python", version: "3.10.0" },
   java: { language: "java", version: "15.0.2" },
+  c: { language: "c", version: "10.2.0" },
+  cpp: { language: "c++", version: "10.2.0" },
 };
 
 /**
@@ -53,11 +55,12 @@ export async function executeCode(language, code) {
     const output = data.run.output || "";
     const stderr = data.run.stderr || "";
 
-    if (stderr) {
+    // If exit code is non-zero or error occurred during execution
+    if (data.run.code !== 0) {
       return {
         success: false,
         output: output,
-        error: stderr,
+        error: stderr || output || "Execution error",
       };
     }
 
@@ -78,6 +81,8 @@ function getFileExtension(language) {
     javascript: "js",
     python: "py",
     java: "java",
+    c: "c",
+    cpp: "cpp",
   };
 
   return extensions[language] || "txt";

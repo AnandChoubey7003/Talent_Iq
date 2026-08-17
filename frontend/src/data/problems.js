@@ -65,11 +65,61 @@ class Solution {
         System.out.println(Arrays.toString(twoSum(new int[]{3, 3}, 6))); // Expected: [0, 1]
     }
 }`,
+      c: `#include <stdio.h>
+
+void twoSum(int* nums, int numsSize, int target, int* res) {
+    // Write your solution here
+    
+}
+
+int main() {
+    int res[2] = {0, 0};
+    int nums1[] = {2, 7, 11, 15};
+    twoSum(nums1, 4, 9, res);
+    printf("[%d,%d]\\n", res[0], res[1]);
+
+    int nums2[] = {3, 2, 4};
+    twoSum(nums2, 3, 6, res);
+    printf("[%d,%d]\\n", res[0], res[1]);
+
+    int nums3[] = {3, 3};
+    twoSum(nums3, 2, 6, res);
+    printf("[%d,%d]\\n", res[0], res[1]);
+
+    return 0;
+}`,
+      cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> twoSum(vector<int>& nums, int target) {
+    // Write your solution here
+    
+    return {0, 0};
+}
+
+int main() {
+    vector<int> n1 = {2, 7, 11, 15};
+    auto r1 = twoSum(n1, 9);
+    cout << "[" << r1[0] << "," << r1[1] << "]" << endl;
+
+    vector<int> n2 = {3, 2, 4};
+    auto r2 = twoSum(n2, 6);
+    cout << "[" << r2[0] << "," << r2[1] << "]" << endl;
+
+    vector<int> n3 = {3, 3};
+    auto r3 = twoSum(n3, 6);
+    cout << "[" << r3[0] << "," << r3[1] << "]" << endl;
+
+    return 0;
+}`,
     },
     expectedOutput: {
       javascript: "[0,1]\n[1,2]\n[0,1]",
       python: "[0, 1]\n[1, 2]\n[0, 1]",
       java: "[0, 1]\n[1, 2]\n[0, 1]",
+      c: "[0,1]\n[1,2]\n[0,1]",
+      cpp: "[0,1]\n[1,2]\n[0,1]",
     },
   },
 
@@ -356,5 +406,15 @@ export const LANGUAGE_CONFIG = {
     name: "Java",
     icon: "/java.png",
     monacoLang: "java",
+  },
+  c: {
+    name: "C",
+    icon: "/c.png",
+    monacoLang: "c",
+  },
+  cpp: {
+    name: "C++",
+    icon: "/cpp.png",
+    monacoLang: "cpp",
   },
 };
