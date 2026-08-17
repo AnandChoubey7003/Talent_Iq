@@ -187,11 +187,51 @@ class Solution {
         System.out.println(Arrays.toString(test2)); // Expected: [h, a, n, n, a, H]
     }
 }`,
+      c: `#include <stdio.h>
+
+void reverseString(char* s, int sSize) {
+    // Write your solution here
+    
+}
+
+int main() {
+    char test1[] = {'h','e','l','l','o','\\0'};
+    reverseString(test1, 5);
+    printf("[\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\"]\\n", test1[0], test1[1], test1[2], test1[3], test1[4]);
+
+    char test2[] = {'H','a','n','n','a','h','\\0'};
+    reverseString(test2, 6);
+    printf("[\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\",\\"%"c\\"]\\n", test2[0], test2[1], test2[2], test2[3], test2[4], test2[5]);
+
+    return 0;
+}`,
+      cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+void reverseString(vector<char>& s) {
+    // Write your solution here
+    
+}
+
+int main() {
+    vector<char> t1 = {'h','e','l','l','o'};
+    reverseString(t1);
+    cout << "[\\"" << t1[0] << "\\",\\"" << t1[1] << "\\",\\"" << t1[2] << "\\",\\"" << t1[3] << "\\",\\"" << t1[4] << "\\"]" << endl;
+
+    vector<char> t2 = {'H','a','n','n','a','h'};
+    reverseString(t2);
+    cout << "[\\"" << t2[0] << "\\",\\"" << t2[1] << "\\",\\"" << t2[2] << "\\",\\"" << t2[3] << "\\",\\"" << t2[4] << "\\",\\"" << t2[5] << "\\"]" << endl;
+
+    return 0;
+}`,
     },
     expectedOutput: {
       javascript: '["o","l","l","e","h"]\n["h","a","n","n","a","H"]',
       python: "['o', 'l', 'l', 'e', 'h']\n['h', 'a', 'n', 'n', 'a', 'H']",
       java: "[o, l, l, e, h]\n[h, a, n, n, a, H]",
+      c: '["o","l","l","e","h"]\n["h","a","n","n","a","H"]',
+      cpp: '["o","l","l","e","h"]\n["h","a","n","n","a","H"]',
     },
   },
 
@@ -254,11 +294,44 @@ print(isPalindrome(" "))  # Expected: True`,
         System.out.println(isPalindrome(" ")); // Expected: true
     }
 }`,
+      c: `#include <stdio.h>
+#include <stdbool.h>
+
+bool isPalindrome(char* s) {
+    // Write your solution here
+    
+    return false;
+}
+
+int main() {
+    printf("%s\\n", isPalindrome("A man, a plan, a canal: Panama") ? "true" : "false");
+    printf("%s\\n", isPalindrome("race a car") ? "true" : "false");
+    printf("%s\\n", isPalindrome(" ") ? "true" : "false");
+    return 0;
+}`,
+      cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+bool isPalindrome(string s) {
+    // Write your solution here
+    
+    return false;
+}
+
+int main() {
+    cout << (isPalindrome("A man, a plan, a canal: Panama") ? "true" : "false") << endl;
+    cout << (isPalindrome("race a car") ? "true" : "false") << endl;
+    cout << (isPalindrome(" ") ? "true" : "false") << endl;
+    return 0;
+}`,
     },
     expectedOutput: {
       javascript: "true\nfalse\ntrue",
       python: "True\nFalse\nTrue",
       java: "true\nfalse\ntrue",
+      c: "true\nfalse\ntrue",
+      cpp: "true\nfalse\ntrue",
     },
   },
 
@@ -320,11 +393,55 @@ print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
         System.out.println(maxSubArray(new int[]{5,4,-1,7,8})); // Expected: 23
     }
 }`,
+      c: `#include <stdio.h>
+
+int maxSubArray(int* nums, int numsSize) {
+    // Write your solution here
+    
+    return 0;
+}
+
+int main() {
+    int nums1[] = {-2,1,-3,4,-1,2,1,-5,4};
+    printf("%d\\n", maxSubArray(nums1, 9));
+
+    int nums2[] = {1};
+    printf("%d\\n", maxSubArray(nums2, 1));
+
+    int nums3[] = {5,4,-1,7,8};
+    printf("%d\\n", maxSubArray(nums3, 5));
+
+    return 0;
+}`,
+      cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int maxSubArray(vector<int>& nums) {
+    // Write your solution here
+    
+    return 0;
+}
+
+int main() {
+    vector<int> n1 = {-2,1,-3,4,-1,2,1,-5,4};
+    cout << maxSubArray(n1) << endl;
+
+    vector<int> n2 = {1};
+    cout << maxSubArray(n2) << endl;
+
+    vector<int> n3 = {5,4,-1,7,8};
+    cout << maxSubArray(n3) << endl;
+
+    return 0;
+}`,
     },
     expectedOutput: {
       javascript: "6\n1\n23",
       python: "6\n1\n23",
       java: "6\n1\n23",
+      c: "6\n1\n23",
+      cpp: "6\n1\n23",
     },
   },
 
@@ -382,11 +499,49 @@ print(maxArea([1,1]))  # Expected: 1`,
         System.out.println(maxArea(new int[]{1,1})); // Expected: 1
     }
 }`,
+      c: `#include <stdio.h>
+
+int maxArea(int* height, int heightSize) {
+    // Write your solution here
+    
+    return 0;
+}
+
+int main() {
+    int h1[] = {1,8,6,2,5,4,8,3,7};
+    printf("%d\\n", maxArea(h1, 9));
+
+    int h2[] = {1,1};
+    printf("%d\\n", maxArea(h2, 2));
+
+    return 0;
+}`,
+      cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int maxArea(vector<int>& height) {
+    // Write your solution here
+    
+    return 0;
+}
+
+int main() {
+    vector<int> h1 = {1,8,6,2,5,4,8,3,7};
+    cout << maxArea(h1) << endl;
+
+    vector<int> h2 = {1,1};
+    cout << maxArea(h2) << endl;
+
+    return 0;
+}`,
     },
     expectedOutput: {
       javascript: "49\n1",
       python: "49\n1",
       java: "49\n1",
+      c: "49\n1",
+      cpp: "49\n1",
     },
   },
 };
