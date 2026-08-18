@@ -7,7 +7,9 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ProblemDescription from "../components/ProblemDescription";
 import OutputPanel from "../components/OutputPanel";
 import CodeEditorPanel from "../components/CodeEditorPanel";
+import AIReviewPanel from "../components/AIReviewPanel";
 import { executeCode } from "../lib/piston";
+import { useAIReview } from "../hooks/useAIReview";
 
 import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
@@ -21,8 +23,11 @@ function ProblemPage() {
   const [code, setCode] = useState(PROBLEMS[currentProblemId].starterCode.javascript);
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [showAIReview, setShowAIReview] = useState(false);
 
   const currentProblem = PROBLEMS[currentProblemId];
+
+  const aiReviewMutation = useAIReview();
 
   // update problem when URL param changes
   useEffect(() => {
@@ -30,6 +35,8 @@ function ProblemPage() {
       setCurrentProblemId(id);
       setCode(PROBLEMS[id].starterCode[selectedLanguage]);
       setOutput(null);
+      setShowAIReview(false);
+      aiReviewMutation.reset();
     }
   }, [id, selectedLanguage]);
 
@@ -38,6 +45,8 @@ function ProblemPage() {
     setSelectedLanguage(newLang);
     setCode(currentProblem.starterCode[newLang]);
     setOutput(null);
+    setShowAIReview(false);
+    aiReviewMutation.reset();
   };
 
   const handleProblemChange = (newProblemId) => navigate(`/problem/${newProblemId}`);
@@ -86,6 +95,7 @@ function ProblemPage() {
   const handleRunCode = async () => {
     setIsRunning(true);
     setOutput(null);
+    setShowAIReview(false);
 
     const result = await executeCode(selectedLanguage, code);
     setOutput(result);
@@ -106,6 +116,16 @@ function ProblemPage() {
     } else {
       toast.error("Code execution failed!");
     }
+  };
+
+  const handleAIReview = () => {
+    setShowAIReview(true);
+    aiReviewMutation.mutate({
+      code,
+      language: selectedLanguage,
+      problemTitle: currentProblem.title,
+      problemDescription: currentProblem.description?.text || "",
+    });
   };
 
   return (
@@ -138,15 +158,27 @@ function ProblemPage() {
                   onLanguageChange={handleLanguageChange}
                   onCodeChange={setCode}
                   onRunCode={handleRunCode}
+                  onAIReview={handleAIReview}
+                  isReviewing={aiReviewMutation.isPending}
+                  hasOutput={output !== null}
                 />
               </Panel>
 
               <PanelResizeHandle className="h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
 
-              {/* Bottom panel - Output Panel*/}
-
+              {/* Bottom panel - Output / AI Review */}
               <Panel defaultSize={30} minSize={30}>
-                <OutputPanel output={output} />
+                {showAIReview ? (
+                  <AIReviewPanel
+                    review={aiReviewMutation.data?.review}
+                    isLoading={aiReviewMutation.isPending}
+                    error={aiReviewMutation.isError}
+                    errorMessage={aiReviewMutation.error?.response?.data?.message || aiReviewMutation.error?.message}
+                    onClose={() => setShowAIReview(false)}
+                  />
+                ) : (
+                  <OutputPanel output={output} />
+                )}
               </Panel>
             </PanelGroup>
           </Panel>

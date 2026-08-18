@@ -14,8 +14,27 @@ const getBaseURL = () => {
 
 const axiosInstance = axios.create({
   baseURL: getBaseURL(),
-  withCredentials: true, // by adding this field browser will send the cookies to server automatically, on every single req
+  withCredentials: true, // sends cookies when available
 });
 
+// Request interceptor to automatically attach Clerk Bearer token
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    try {
+      if (typeof window !== "undefined" && window.Clerk?.session) {
+        const token = await window.Clerk.session.getToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      }
+    } catch (err) {
+      console.warn("Failed to get Clerk session token for request:", err);
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default axiosInstance;
+
 

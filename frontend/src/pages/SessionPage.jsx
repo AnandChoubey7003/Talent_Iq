@@ -10,6 +10,8 @@ import { getDifficultyBadgeClass } from "../lib/utils";
 import { Loader2Icon, LogOutIcon, PhoneOffIcon } from "lucide-react";
 import CodeEditorPanel from "../components/CodeEditorPanel";
 import OutputPanel from "../components/OutputPanel";
+import AIReviewPanel from "../components/AIReviewPanel";
+import { useAIReview } from "../hooks/useAIReview";
 
 import useStreamClient from "../hooks/useStreamClient";
 import { StreamCall, StreamVideo } from "@stream-io/video-react-sdk";
@@ -21,11 +23,13 @@ function SessionPage() {
   const { user } = useUser();
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [showAIReview, setShowAIReview] = useState(false);
 
   const { data: sessionData, isLoading: loadingSession, refetch } = useSessionById(id);
 
   const joinSessionMutation = useJoinSession();
   const endSessionMutation = useEndSession();
+  const aiReviewMutation = useAIReview();
 
   const session = sessionData?.session;
   const isHost = session?.host?.clerkId === user?.id;
@@ -77,15 +81,28 @@ function SessionPage() {
     const starterCode = problemData?.starterCode?.[newLang] || "";
     setCode(starterCode);
     setOutput(null);
+    setShowAIReview(false);
+    aiReviewMutation.reset();
   };
 
   const handleRunCode = async () => {
     setIsRunning(true);
     setOutput(null);
+    setShowAIReview(false);
 
     const result = await executeCode(selectedLanguage, code);
     setOutput(result);
     setIsRunning(false);
+  };
+
+  const handleAIReview = () => {
+    setShowAIReview(true);
+    aiReviewMutation.mutate({
+      code,
+      language: selectedLanguage,
+      problemTitle: problemData?.title || session?.problem || "",
+      problemDescription: problemData?.description?.text || "",
+    });
   };
 
   const handleEndSession = () => {
@@ -239,13 +256,26 @@ function SessionPage() {
                       onLanguageChange={handleLanguageChange}
                       onCodeChange={(value) => setCode(value)}
                       onRunCode={handleRunCode}
+                      onAIReview={handleAIReview}
+                      isReviewing={aiReviewMutation.isPending}
+                      hasOutput={output !== null}
                     />
                   </Panel>
 
                   <PanelResizeHandle className="h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
 
                   <Panel defaultSize={30} minSize={15}>
-                    <OutputPanel output={output} />
+                    {showAIReview ? (
+                      <AIReviewPanel
+                        review={aiReviewMutation.data?.review}
+                        isLoading={aiReviewMutation.isPending}
+                        error={aiReviewMutation.isError}
+                        errorMessage={aiReviewMutation.error?.response?.data?.message || aiReviewMutation.error?.message}
+                        onClose={() => setShowAIReview(false)}
+                      />
+                    ) : (
+                      <OutputPanel output={output} />
+                    )}
                   </Panel>
                 </PanelGroup>
               </Panel>
